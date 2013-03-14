@@ -1,0 +1,4 @@
+waitable
+========
+
+jQuery waitable button
