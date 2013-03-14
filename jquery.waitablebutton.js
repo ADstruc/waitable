@@ -44,9 +44,9 @@
             // empty out button
             $el.html('');
 
-            // append spinner 
+            // append spinner
             appendSpinner($el, settings.spinnerSize);
-            
+
             // show spinner
             showSpinner($el);
 
@@ -58,14 +58,14 @@
 
             // call the user's callback and pass through context and event
             var xhr = settings.onClick.apply(this, e);
-            
-            if('object' !== typeof xhr || 
-               'function' !== typeof xhr.done || 
-               'function' !== typeof xhr.fail || 
+
+            if('object' !== typeof xhr ||
+               'function' !== typeof xhr.done ||
+               'function' !== typeof xhr.fail ||
                'function' !== typeof xhr.always) {
               $.error('Return from onClick handler does not implement promise methods');
             }
-        
+
             xhr.done(function() {
                     if(data.deferred) {
                         data.deferred.resolveWith(this, arguments);
@@ -100,7 +100,7 @@
                 onClick: function() {
                     throw 'You must define an onClick function which returns a jqXhr object';
                 },
-                spinnerSize: 16,
+                spinnerSize: 16
             }, options);
 
             // validate spinnerSize option
@@ -135,7 +135,7 @@
                 handleButtonClick($el, settings, data, height, width, buttonContent, baseClasses);
             });
         },
-        
+
         promise: function() {
             var data = $(this).data(NAME);
 
