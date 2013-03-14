@@ -14,101 +14,129 @@
  */
 
 (function( $ ) {
-  var NAME = 'waitableButton';
+    var NAME = 'waitableButton';
 
-  var methods = {
-    init: function(options) {
-        var settings = $.extend({
-            onClick: function() {
-                throw 'You must define an onClick function which returns a jqXhr object';
-            },
-            baseClass: 'waitable-button',
-            doneClass: 'waitable-button-done',
-            failClass: 'waitable-button-fail',
-            waitingClass: 'waitable-button-waiting'
+    var showSpinner = function($el) {
+        $el.find('.waitable-button-spinner-container').show();
+    };
 
-        }, options);
+    var hideSpinner = function($el) {
+        $el.find('.waitable-button-spinner-container').hide();
+    };
 
-        return this.each(function() {
-            var $el = $(this),
-                data = $el.data(NAME);
-
-            if(!data) {
-                data = {
-                    inProgress: false
-                };
-
-                $el.data(NAME, data);
-            }
-
-            $el
-            .addClass(settings.baseClass)
-            .on('click', function(e) {
-                // if we are waiting, do nothing on click
-                if (true === data.inProgress) {
-                    // @todo add an additional class if the user
-                    //       clicks button while in waiting state
-                    return;
-                }
-
-                 // put button into waiting state
-                data.inProgress = true;
-                $el.removeClass(settings.doneClass)
-                   .removeClass(settings.failClass)
-                   .addClass(settings.waitingClass);
-
-                // call the user's callback and pass through context and event
-                var xhr = settings.onClick.apply(this, e);
-                
-                if('object' !== typeof xhr || 
-                   'function' !== typeof xhr.done || 
-                   'function' !== typeof xhr.fail || 
-                   'function' !== typeof xhr.always) {
-                  $.error('Return from onClick handler does not implement promise methods');
-                }
-            
-                xhr
-                .done(function() {
-                    if(data.deferred) {
-                        data.deferred.resolveWith(arguments);
-                    }
-
-                    $el.addClass(settings.doneClass);
-                })
-                .fail(function() {
-                    if(data.deferred) {
-                        data.deferred.rejectWith(arguments);
-                    }
-
-                    $el.addClass(settings.failClass);
-                })
-                .always(function() {
-                    $el.removeClass(settings.waitingClass);
-                    data.inProgress = false;
-                });
-            });
-        });
-    },
-    promise: function() {
-        var data = $(this).data(NAME);
-
-        if(!data) {
-            $.error(NAME + ' has not been initialized on this element');
+    var appendSpinner = function($el, spinnerSize, waitingClass) {
+        if(-1 === [16, 32, 64].indexOf(spinnerSize)) {
+            $.error('Spinner size should be 16, 32 or 64');
         }
 
-        data.deferred = $.Deferred();
+        if(!$el.find('.waitable-button-spinner-container').length) {
+            $('<div class="waitable-button-spinner-container ' + waitingClass + '"></div>')
+                .append('<div class="waitable-button-spinner waitable-button-spinner-' + spinnerSize +'"></div>')
+                .appendTo($el);
+        }
+    };
 
-        return data.deferred.promise();
-    }
-  };
+    var methods = {
+        init: function(options) {
+            var settings = $.extend({
+                onClick: function() {
+                    throw 'You must define an onClick function which returns a jqXhr object';
+                },
+                baseClass: 'waitable-button',
+                waitingClass: 'waitable-button-waiting',
+                doneClass: 'waitable-button-done',
+                failClass: 'waitable-button-fail',
+                spinnerSize: 16,
+            }, options);
 
-  $.fn[NAME] = function(method) {
-    if(methods[method]) {
-      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else if('object' === typeof method || !method) {
-      return methods.init.apply(this, arguments);
-    } else {
-      $.error('Method ' +  method + ' does not exist on jQuery.' + NAME);
-    }
-  };
+            return this.each(function() {
+                var $el = $(this),
+                    data = $el.data(NAME);
+
+                if(!data) {
+                    data = {
+                        inProgress: false
+                    };
+
+                    $el.data(NAME, data);
+                }
+
+                // append spinner 
+                appendSpinner($el, settings.spinnerSize, settings.waitingClass);
+
+                $el
+                .addClass(settings.baseClass)
+                .on('click', function(e) {
+                    // if we are waiting, do nothing on click
+                    if (true === data.inProgress) {
+                        // @todo add an additional class if the user
+                        //       clicks button while in waiting state
+                        return;
+                    }
+                    
+                    // show spinner
+                    showSpinner($el);
+
+                    // put button into waiting state
+                    data.inProgress = true;
+                    $el.removeClass(settings.doneClass)
+                       .removeClass(settings.failClass)
+                       .addClass(settings.waitingClass);
+
+                    // call the user's callback and pass through context and event
+                    var xhr = settings.onClick.apply(this, e);
+                    
+                    if('object' !== typeof xhr || 
+                       'function' !== typeof xhr.done || 
+                       'function' !== typeof xhr.fail || 
+                       'function' !== typeof xhr.always) {
+                      $.error('Return from onClick handler does not implement promise methods');
+                    }
+                
+                    xhr
+                    .done(function() {
+                        if(data.deferred) {
+                            data.deferred.resolveWith(arguments);
+                        }
+
+                        $el.addClass(settings.doneClass);
+                    })
+                    .fail(function() {
+                        if(data.deferred) {
+                            data.deferred.rejectWith(arguments);
+                        }
+
+                        $el.addClass(settings.failClass);
+                    })
+                    .always(function() {
+                        $el.removeClass(settings.waitingClass);
+                        hideSpinner($el);
+                        data.inProgress = false;
+                    });
+                });
+            });
+        },
+        
+        promise: function() {
+            var data = $(this).data(NAME);
+
+            if(!data) {
+                $.error(NAME + ' has not been initialized on this element');
+            }
+
+            data.deferred = $.Deferred();
+
+            return data.deferred.promise();
+        }
+    };
+
+    $.fn[NAME] = function(method) {
+        if(methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if('object' === typeof method || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method ' +  method + ' does not exist on jQuery.' + NAME);
+        }
+    };
 })( jQuery );

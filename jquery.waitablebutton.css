@@ -1,0 +1,59 @@
+
+.waitable-button {
+    padding: 10px;
+    position: relative;
+    z-index: 1;
+    background-color: lightgrey;
+}
+
+.waitable-button-done {
+    background-color: lightgreen;
+}
+
+.waitable-button-fail {
+    background-color: lightcoral;
+}
+
+.waitable-button-waiting {
+    background-color: lightblue;
+}
+
+.waitable-button-spinner-container {
+	position: absolute;
+	z-index: 2;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	display: none;
+}
+
+.waitable-button-spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}
+
+.waitable-button-spinner.waitable-button-spinner-16 {
+	background: url('images/spinner-16.gif') no-repeat 0 0;
+	height: 16px;
+	width: 16px;
+	margin-top: -8px;
+	margin-left: -8px;
+}
+
+.waitable-button-spinner.waitable-button-spinner-32 {
+	background: url('images/spinner-32.gif') no-repeat 0 0;
+	height: 32px;
+	width: 32px;
+	margin-top: -16px;
+	margin-left: -16px;
+}
+
+.waitable-button-spinner.waitable-button-spinner-64 {
+	background: url('images/spinner-64.gif') no-repeat 0 0;
+	height: 64px;
+	width: 64px;
+	margin-top: -32px;
+	margin-left: -32px;
+}
