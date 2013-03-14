@@ -22,6 +22,7 @@
         onClick: function() {
             throw 'You must define an onClick function which returns a jqXhr object';
         },
+        baseClass: 'waitable-button',
         doneClass: 'waitable-button-done',
         failClass: 'waitable-button-fail',
         waitingClass: 'waitable-button-waiting'
@@ -30,16 +31,22 @@
 
     return this.each(function() {
 
-       $(this).on('click', function(e) {
+       $(this)
+       .addClass(settings.baseClass)
+       .on('click', function(e) {
            var $el = $(this);
            // if we are waiting, do nothing on click
-           if (true === $el.data(waitingDataAttribute)) {
+           if (true === $el.data(waitingDataKey)) {
                // @todo add an additional class if the user
                //       clicks button while in waiting state
                return;
            }
            // put button into waiting state
            $el.data(waitingDataKey, true);
+           // remove previous state classes and add waiting class
+           $el.removeClass(settings.doneClass);
+           $el.removeClass(settings.failClass);
+           $el.addClass(settings.waitingClass);
            // call the user's callback and pass through context and event
            var promise = settings.onClick.apply(this, e);
            // @todo check that has methods implemented by promise
@@ -51,8 +58,7 @@
                 $el.addClass(settings.failClass);
             })
             .always(function() {
-                $el.removeClass(settings.doneClass);
-                $el.removeClass(settings.failClass);
+                $el.removeClass(settings.waitingClass);
                 $el.data(waitingDataKey, false);
             });
        });
