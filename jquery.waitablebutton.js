@@ -32,7 +32,7 @@
         }
     };
 
-    var handleButtonClick = function($el, settings, data, height, width, buttonContent, baseClasses) {
+    var handleButtonClick = function($el, settings, data, height, width, buttonContent, baseClass) {
         $el.on('click', function(e) {
             // if we are waiting, do nothing on click
             if (true === data.inProgress) {
@@ -52,9 +52,9 @@
 
             // put button into waiting state
             data.inProgress = true;
-            $el.removeClass(settings.doneClasses)
-                .removeClass(settings.failClasses)
-                .addClass(baseClasses);
+            $el.removeClass(settings.doneClass)
+                .removeClass(settings.failClass)
+                .addClass(baseClass);
 
             // call the user's callback and pass through context and event
             var xhr = settings.onClick.apply(this, e);
@@ -71,9 +71,9 @@
                         data.deferred.resolveWith($el.get(0), arguments);
                     }
 
-                    if(settings.doneClasses) {
-                        $el.removeClass(baseClasses)
-                            .addClass(settings.doneClasses);
+                    if(settings.doneClass) {
+                        $el.removeClass(baseClass)
+                            .addClass(settings.doneClass);
                     }
                 })
                 .fail(function() {
@@ -81,9 +81,9 @@
                         data.deferred.rejectWith($el.get(0), arguments);
                     }
 
-                    if(settings.failClasses) {
-                        $el.removeClass(baseClasses)
-                            .addClass(settings.failClasses);
+                    if(settings.failClass) {
+                        $el.removeClass(baseClass)
+                            .addClass(settings.failClass);
                     }
                 })
                 .always(function() {
@@ -114,7 +114,7 @@
                     height = $el.outerHeight(),
                     width = $el.outerWidth(),
                     buttonContent = $el.html(),
-                    baseClasses = $el.attr('class');
+                    baseClass = $el.attr('class');
 
                 if(!data) {
                     data = {
@@ -132,7 +132,7 @@
                 $el.addClass('waitable-button');
 
                 // handle button click
-                handleButtonClick($el, settings, data, height, width, buttonContent, baseClasses);
+                handleButtonClick($el, settings, data, height, width, buttonContent, baseClass);
             });
         },
 
