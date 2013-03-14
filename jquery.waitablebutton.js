@@ -32,7 +32,7 @@
         }
     };
 
-    var handleButtonClick = function($el, settings, data, height, width, buttonContent, baseClass) {
+    var handleButtonClick = function($el, settings, data, height, width, buttonContent, baseClasses) {
         $el.on('click', function(e) {
             // if we are waiting, do nothing on click
             if (true === data.inProgress) {
@@ -52,9 +52,9 @@
 
             // put button into waiting state
             data.inProgress = true;
-            $el.removeClass(settings.doneClass)
-                .removeClass(settings.failClass)
-                .addClass(baseClass);
+            $el.removeClass(settings.doneClasses)
+                .removeClass(settings.failClasses)
+                .addClass(baseClasses);
 
             // call the user's callback and pass through context and event
             var xhr = settings.onClick.apply(this, e);
@@ -71,16 +71,20 @@
                         data.deferred.resolveWith(this, arguments);
                     }
 
-                    $el.removeClass(baseClass)
-                        .addClass(settings.doneClass);
+                    if(settings.doneClasses) {
+                        $el.removeClass(baseClasses)
+                            .addClass(settings.doneClasses);
+                    }
                 })
                 .fail(function() {
                     if(data.deferred) {
                         data.deferred.rejectWith(this, arguments);
                     }
 
-                    $el.removeClass(baseClass)
-                        .addClass(settings.failClass);
+                    if(settings.failClasses) {
+                        $el.removeClass(baseClasses)
+                            .addClass(settings.failClasses);
+                    }
                 })
                 .always(function() {
                     hideSpinner($el);
@@ -96,8 +100,6 @@
                 onClick: function() {
                     throw 'You must define an onClick function which returns a jqXhr object';
                 },
-                doneClass: 'waitable-button-done',
-                failClass: 'waitable-button-fail',
                 spinnerSize: 16,
             }, options);
 
@@ -112,7 +114,7 @@
                     height = $el.outerHeight(),
                     width = $el.outerWidth(),
                     buttonContent = $el.html(),
-                    baseClass = $el.attr('class');
+                    baseClasses = $el.attr('class');
 
                 if(!data) {
                     data = {
@@ -130,7 +132,7 @@
                 $el.addClass('waitable-button');
 
                 // handle button click
-                handleButtonClick($el, settings, data, height, width, buttonContent, baseClass);
+                handleButtonClick($el, settings, data, height, width, buttonContent, baseClasses);
             });
         },
         

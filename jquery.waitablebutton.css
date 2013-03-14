@@ -4,14 +4,6 @@
     z-index: 1;
 }
 
-.waitable-button-done {
-    background-color: lightgreen;
-}
-
-.waitable-button-fail {
-    background-color: lightcoral;
-}
-
 .waitable-button-spinner-container {
 	position: absolute;
 	z-index: 2;
