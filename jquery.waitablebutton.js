@@ -25,10 +25,6 @@
     };
 
     var appendSpinner = function($el, spinnerSize) {
-        if(-1 === [16, 32, 64].indexOf(spinnerSize)) {
-            $.error('Spinner size should be 16, 32 or 64');
-        }
-
         if(!$el.find('.waitable-button-spinner-container').length) {
             $('<div class="waitable-button-spinner-container"></div>')
                 .append('<div class="waitable-button-spinner waitable-button-spinner-' + spinnerSize +'"></div>')
@@ -104,6 +100,11 @@
                 failClass: 'waitable-button-fail',
                 spinnerSize: 16
             }, options);
+
+            // validate spinnerSize option
+            if(-1 === [16, 32, 64].indexOf(settings.spinnerSize)) {
+                $.error('Spinner size should be 16, 32 or 64');
+            }
 
             return this.each(function() {
                 var $el = $(this),
