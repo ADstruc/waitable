@@ -18,68 +18,87 @@
 
   var methods = {
     init: function(options) {
-      var settings = $.extend({
-          onClick: function() {
-              throw 'You must define an onClick function which returns a jqXhr object';
-          },
-          baseClass: 'waitable-button',
-          doneClass: 'waitable-button-done',
-          failClass: 'waitable-button-fail',
-          waitingClass: 'waitable-button-waiting'
+        var settings = $.extend({
+            onClick: function() {
+                throw 'You must define an onClick function which returns a jqXhr object';
+            },
+            baseClass: 'waitable-button',
+            doneClass: 'waitable-button-done',
+            failClass: 'waitable-button-fail',
+            waitingClass: 'waitable-button-waiting'
 
-      }, options);
+        }, options);
 
-      return this.each(function() {
-        var $el = $(this),
-            data = $el.data(NAME);
+        return this.each(function() {
+            var $el = $(this),
+                data = $el.data(NAME);
 
             if(!data) {
-              data = {
-                inProgress: false
-              };
+                data = {
+                    inProgress: false
+                };
 
-              $el.data(NAME, data);
+                $el.data(NAME, data);
             }
 
-         $el
-         .addClass(settings.baseClass)
-         .on('click', function(e) {
-            // if we are waiting, do nothing on click
-            if (true === data.inProgress) {
-              // @todo add an additional class if the user
-              //       clicks button while in waiting state
-              return;
-            }
+            $el
+            .addClass(settings.baseClass)
+            .on('click', function(e) {
+                // if we are waiting, do nothing on click
+                if (true === data.inProgress) {
+                    // @todo add an additional class if the user
+                    //       clicks button while in waiting state
+                    return;
+                }
 
-             // put button into waiting state
-            data.inProgress = true;
-            $el.removeClass(settings.doneClass)
-               .removeClass(settings.failClass)
-               .addClass(settings.waitingClass);
+                 // put button into waiting state
+                data.inProgress = true;
+                $el.removeClass(settings.doneClass)
+                   .removeClass(settings.failClass)
+                   .addClass(settings.waitingClass);
 
-            // call the user's callback and pass through context and event
-            var promise = settings.onClick.apply(this, e);
+                // call the user's callback and pass through context and event
+                var xhr = settings.onClick.apply(this, e);
+                
+                if('object' !== typeof xhr || 
+                   'function' !== typeof xhr.done || 
+                   'function' !== typeof xhr.fail || 
+                   'function' !== typeof xhr.always) {
+                  $.error('Return from onClick handler does not implement promise methods');
+                }
             
-            if('object' !== typeof promise || 
-               'function' !== typeof promise.done || 
-               'function' !== typeof promise.fail || 
-               'function' !== typeof promise.always) {
-              $.error('Return from onClick handler does not implement promise methods');
-            }
-            
-            promise
-              .done(function() {
-                  $el.addClass(settings.doneClass);
-              })
-              .fail(function() {
-                  $el.addClass(settings.failClass);
-              })
-              .always(function() {
-                  $el.removeClass(settings.waitingClass);
-                  data.inProgress = false;
-              });
+                xhr
+                .done(function() {
+                    if(data.deferred) {
+                        data.deferred.resolveWith(arguments);
+                    }
+
+                    $el.addClass(settings.doneClass);
+                })
+                .fail(function() {
+                    if(data.deferred) {
+                        data.deferred.rejectWith(arguments);
+                    }
+
+                    $el.addClass(settings.failClass);
+                })
+                .always(function() {
+                    $el.removeClass(settings.waitingClass);
+                    data.inProgress = false;
+                });
+            });
         });
-      });
+    },
+    promise: function() {
+        var data = $(this).data(NAME);
+
+        if(!data) {
+            $.error(NAME + ' has not been initialized on this element');
+        }
+
+        data.deferred = $.Deferred();
+
+        return data.deferred.promise();
     }
   };
 

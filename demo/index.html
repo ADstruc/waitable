@@ -50,6 +50,16 @@
                     }
                 });
 
+                $('#my-button-2').waitableButton('promise')
+                .done(function() {
+                    console.log('done');
+                })
+                .fail(function() {
+                    console.log('fail');
+                })
+                .always(function() {
+                    console.log('always');
+                });
             });
 
 
