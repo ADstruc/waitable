@@ -41,6 +41,10 @@
                 return;
             }
 
+            // set button dimensions explicitly
+            $el.css('height', height)
+                .css('width', width);
+
             // empty out button
             $el.html('');
 
@@ -88,10 +92,16 @@
                 })
                 .always(function() {
                     hideSpinner($el);
+                    cleanup($el);
                     $el.html(buttonContent);
                     data.inProgress = false;
                 });
         });
+    };
+
+    var cleanup = function($el) {
+        $el.css('height', '');
+        $el.css('width', '');
     };
 
     var methods = {
@@ -123,10 +133,6 @@
 
                     $el.data(NAME, data);
                 }
-
-                // set button dimensions explicitly
-                $el.css('height', height)
-                    .css('width', width);
 
                 // set waitable-button class
                 $el.addClass('waitable-button');
