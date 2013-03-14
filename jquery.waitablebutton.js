@@ -36,6 +36,64 @@
         }
     };
 
+    var handleButtonClick = function($el, settings, data, height, width, buttonContent, baseClass) {
+        $el.on('click', function(e) {
+            // if we are waiting, do nothing on click
+            if (true === data.inProgress) {
+                // @todo add an additional class if the user
+                //       clicks button while in waiting state
+                return;
+            }
+
+            // empty out button
+            $el.html('');
+
+            // append spinner 
+            appendSpinner($el, settings.spinnerSize);
+            
+            // show spinner
+            showSpinner($el);
+
+            // put button into waiting state
+            data.inProgress = true;
+            $el.removeClass(settings.doneClass)
+                .removeClass(settings.failClass)
+                .addClass(baseClass);
+
+            // call the user's callback and pass through context and event
+            var xhr = settings.onClick.apply(this, e);
+            
+            if('object' !== typeof xhr || 
+               'function' !== typeof xhr.done || 
+               'function' !== typeof xhr.fail || 
+               'function' !== typeof xhr.always) {
+              $.error('Return from onClick handler does not implement promise methods');
+            }
+        
+            xhr.done(function() {
+                    if(data.deferred) {
+                        data.deferred.resolveWith(this, arguments);
+                    }
+
+                    $el.removeClass(baseClass)
+                        .addClass(settings.doneClass);
+                })
+                .fail(function() {
+                    if(data.deferred) {
+                        data.deferred.rejectWith(this, arguments);
+                    }
+
+                    $el.removeClass(baseClass)
+                        .addClass(settings.failClass);
+                })
+                .always(function() {
+                    hideSpinner($el);
+                    $el.html(buttonContent);
+                    data.inProgress = false;
+                });
+        });
+    };
+
     var methods = {
         init: function(options) {
             var settings = $.extend({
@@ -49,7 +107,11 @@
 
             return this.each(function() {
                 var $el = $(this),
-                    data = $el.data(NAME);
+                    data = $el.data(NAME),
+                    height = $el.outerHeight(),
+                    width = $el.outerWidth(),
+                    buttonContent = $el.html(),
+                    baseClass = $el.attr('class');
 
                 if(!data) {
                     data = {
@@ -59,77 +121,15 @@
                     $el.data(NAME, data);
                 }
 
-                // get some properties of the button
-                var height = $el.outerHeight();
-                var width = $el.outerWidth();
-                var buttonContent = $el.html();
-                var baseClass = $el.attr('class');
-
                 // set button dimensions explicitly
-                $el.css('height', height);
-                $el.css('width', width);
+                $el.css('height', height)
+                    .css('width', width);
 
-                $el
-                .addClass('waitable-button')
-                .on('click', function(e) {
-                    // if we are waiting, do nothing on click
-                    if (true === data.inProgress) {
-                        // @todo add an additional class if the user
-                        //       clicks button while in waiting state
-                        return;
-                    }
+                // set waitable-button class
+                $el.addClass('waitable-button');
 
-                    // empty out button
-                    $el.html('');
-
-                    // append spinner 
-                    appendSpinner($el, settings.spinnerSize);
-                    
-                    // show spinner
-                    showSpinner($el);
-
-                    // put button into waiting state
-                    data.inProgress = true;
-                    $el
-                    .removeClass(settings.doneClass)
-                    .removeClass(settings.failClass)
-                    .addClass(baseClass);
-
-                    // call the user's callback and pass through context and event
-                    var xhr = settings.onClick.apply(this, e);
-                    
-                    if('object' !== typeof xhr || 
-                       'function' !== typeof xhr.done || 
-                       'function' !== typeof xhr.fail || 
-                       'function' !== typeof xhr.always) {
-                      $.error('Return from onClick handler does not implement promise methods');
-                    }
-                
-                    xhr
-                    .done(function() {
-                        if(data.deferred) {
-                            data.deferred.resolveWith(this, arguments);
-                        }
-
-                        $el
-                        .removeClass(baseClass)
-                        .addClass(settings.doneClass);
-                    })
-                    .fail(function() {
-                        if(data.deferred) {
-                            data.deferred.rejectWith(this, arguments);
-                        }
-
-                        $el
-                        .removeClass(baseClass)
-                        .addClass(settings.failClass);
-                    })
-                    .always(function() {
-                        hideSpinner($el);
-                        $el.html(buttonContent);
-                        data.inProgress = false;
-                    });
-                });
+                // handle button click
+                handleButtonClick($el, settings, data, height, width, buttonContent, baseClass);
             });
         },
         
