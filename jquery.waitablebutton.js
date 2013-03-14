@@ -68,7 +68,7 @@
 
             xhr.done(function() {
                     if(data.deferred) {
-                        data.deferred.resolveWith(this, arguments);
+                        data.deferred.resolveWith($el.get(0), arguments);
                     }
 
                     $el.removeClass(baseClass)
@@ -76,7 +76,7 @@
                 })
                 .fail(function() {
                     if(data.deferred) {
-                        data.deferred.rejectWith(this, arguments);
+                        data.deferred.rejectWith($el.get(0), arguments);
                     }
 
                     $el.removeClass(baseClass)
