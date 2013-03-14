@@ -1,9 +1,7 @@
 
 .waitable-button {
-    padding: 10px;
     position: relative;
     z-index: 1;
-    background-color: lightgrey;
 }
 
 .waitable-button-done {
@@ -12,10 +10,6 @@
 
 .waitable-button-fail {
     background-color: lightcoral;
-}
-
-.waitable-button-waiting {
-    background-color: lightblue;
 }
 
 .waitable-button-spinner-container {

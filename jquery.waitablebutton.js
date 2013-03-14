@@ -24,13 +24,13 @@
         $el.find('.waitable-button-spinner-container').hide();
     };
 
-    var appendSpinner = function($el, spinnerSize, waitingClass) {
+    var appendSpinner = function($el, spinnerSize) {
         if(-1 === [16, 32, 64].indexOf(spinnerSize)) {
             $.error('Spinner size should be 16, 32 or 64');
         }
 
         if(!$el.find('.waitable-button-spinner-container').length) {
-            $('<div class="waitable-button-spinner-container ' + waitingClass + '"></div>')
+            $('<div class="waitable-button-spinner-container"></div>')
                 .append('<div class="waitable-button-spinner waitable-button-spinner-' + spinnerSize +'"></div>')
                 .appendTo($el);
         }
@@ -42,8 +42,6 @@
                 onClick: function() {
                     throw 'You must define an onClick function which returns a jqXhr object';
                 },
-                baseClass: 'waitable-button',
-                waitingClass: 'waitable-button-waiting',
                 doneClass: 'waitable-button-done',
                 failClass: 'waitable-button-fail',
                 spinnerSize: 16,
@@ -61,11 +59,18 @@
                     $el.data(NAME, data);
                 }
 
-                // append spinner 
-                appendSpinner($el, settings.spinnerSize, settings.waitingClass);
+                // get some properties of the button
+                var height = $el.outerHeight();
+                var width = $el.outerWidth();
+                var buttonContent = $el.html();
+                var baseClass = $el.attr('class');
+
+                // set button dimensions explicitly
+                $el.css('height', height);
+                $el.css('width', width);
 
                 $el
-                .addClass(settings.baseClass)
+                .addClass('waitable-button')
                 .on('click', function(e) {
                     // if we are waiting, do nothing on click
                     if (true === data.inProgress) {
@@ -73,15 +78,22 @@
                         //       clicks button while in waiting state
                         return;
                     }
+
+                    // empty out button
+                    $el.html('');
+
+                    // append spinner 
+                    appendSpinner($el, settings.spinnerSize);
                     
                     // show spinner
                     showSpinner($el);
 
                     // put button into waiting state
                     data.inProgress = true;
-                    $el.removeClass(settings.doneClass)
-                       .removeClass(settings.failClass)
-                       .addClass(settings.waitingClass);
+                    $el
+                    .removeClass(settings.doneClass)
+                    .removeClass(settings.failClass)
+                    .addClass(baseClass);
 
                     // call the user's callback and pass through context and event
                     var xhr = settings.onClick.apply(this, e);
@@ -96,21 +108,25 @@
                     xhr
                     .done(function() {
                         if(data.deferred) {
-                            data.deferred.resolveWith(arguments);
+                            data.deferred.resolveWith(this, arguments);
                         }
 
-                        $el.addClass(settings.doneClass);
+                        $el
+                        .removeClass(baseClass)
+                        .addClass(settings.doneClass);
                     })
                     .fail(function() {
                         if(data.deferred) {
-                            data.deferred.rejectWith(arguments);
+                            data.deferred.rejectWith(this, arguments);
                         }
 
-                        $el.addClass(settings.failClass);
+                        $el
+                        .removeClass(baseClass)
+                        .addClass(settings.failClass);
                     })
                     .always(function() {
-                        $el.removeClass(settings.waitingClass);
                         hideSpinner($el);
+                        $el.html(buttonContent);
                         data.inProgress = false;
                     });
                 });

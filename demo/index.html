@@ -4,30 +4,35 @@
         <script src="vendor/jquery-1.9.1.min.js" type="text/javascript"></script>
         <script src="../jquery.waitablebutton.js" type="text/javascript"></script>
         <script src="fakeajax.js" type="text/javascript"></script>
+        <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css">
         <link href="../jquery.waitablebutton.css" rel="stylesheet" type="text/css">
+
+        <style>
+            button {
+                margin: 10px;
+            }
+        </style>
     </head>
 
     <body>
-        <button id="my-button-1">Success Button</button>
-        <button id="my-button-2">Fail Button</button>
+        <button id="my-button-1" class="btn btn-primary">Success Button</button>
+        <button id="my-button-2" class="btn">Fail Button</button>
 
         <script>
             $(document).ready(function(){
-
                 $('#my-button-1').waitableButton({
                     onClick: function() {
-
                         return fakeAjax('done', 1000);
-
-                    }
+                    },
+                    doneClass: 'btn btn-success'
                 });
 
                 $('#my-button-2').waitableButton({
                     onClick: function() {
-
                         return fakeAjax('fail', 1000);
-
-                    }
+                    },
+                    waitingClass: 'btn btn-info',
+                    failClass: 'btn btn-danger'
                 });
 
                 $('#my-button-2').waitableButton('promise')
@@ -41,10 +46,6 @@
                     console.log('always');
                 });
             });
-
-
         </script>
-
-
     </body>
 </html>
