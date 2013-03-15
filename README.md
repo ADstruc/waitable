@@ -71,11 +71,14 @@ promise.fail(function() {
 ### More options
 If you want to customize how waitable button styles your buttons, we've provided a few options that you can set during initialization.
 
-Option      | Description | Default
-------------|-------------|--------
-doneClass   | This class is attached to the button after the jqXhr/promise completes successfully | waitable-button-done
-failClass   | This class is attached to the button if the jqXhr/promise fails | waitable-button-fail
-spinnerSize | Size of the spinner in pixels (must be either 16, 32, or 64) | 16
+Option         | Expected             | Description                                                                                                           | Default
+---------------|----------------------|-----------------------------------------------------------------------------------------------------------------------|------------------
+doneClass      | Array or String      | These replaces the classes on the button after the jqXhr/promise completes successfully                               | ~
+doneText       | String               | Replacement text for the button after the jqXhr/promise completes successfully                                        | ~ (Original text)
+disabledOnDone | Boolean              | If true, after the jqXhr/promise completes successfully, subsequent clicks on the button do not retrigger the request | false
+failClass      | Array or String      | These replaces the classes on the button if the jqXhr/promise fails                                                   | ~
+failText       | String               | Replacement text for the button if the jqXhr/promise fails                                                            | ~ (Original text)
+spinnerSize    | Integer (16, 32, 64) | Size of the spinner in pixels                                                                                         | 16
 
 ### Contributing
 We welcome all contributions (please fork and submit a pull request)! We came up with this during one of our hack days, and would love to see what sorts of ideas you all have!
