@@ -32,14 +32,17 @@
         }
     };
 
-    var handleButtonClick = function($el, settings, data, height, width, buttonContent, baseClass) {
+    var handleButtonClick = function($el, settings, data, buttonContent, baseClass) {
         $el.on('click', function(e) {
             // if we are waiting, do nothing on click
-            if (true === data.inProgress) {
+            if (true === data.inProgress || true === data.disabled) {
                 // @todo add an additional class if the user
                 //       clicks button while in waiting state
                 return;
             }
+
+            var height = $el.outerHeight(),
+                width = $el.outerWidth();
 
             // set button dimensions explicitly
             $el.css('height', height)
@@ -79,6 +82,16 @@
                         $el.removeClass(baseClass)
                             .addClass(settings.doneClass);
                     }
+
+                    if(settings.doneText) {
+                        $el.html(settings.doneText)
+                    } else {
+                        $el.html(buttonContent);
+                    }
+
+                    if(true === settings.disabledOnDone) {
+                        data.disabled = true;
+                    }
                 })
                 .fail(function() {
                     if(data.deferred) {
@@ -89,11 +102,16 @@
                         $el.removeClass(baseClass)
                             .addClass(settings.failClass);
                     }
+
+                    if(settings.failText) {
+                        $el.html(settings.failText)
+                    } else {
+                        $el.html(buttonContent);
+                    }
                 })
                 .always(function() {
                     hideSpinner($el);
                     cleanup($el);
-                    $el.html(buttonContent);
                     data.inProgress = false;
                 });
         });
@@ -110,6 +128,7 @@
                 onClick: function() {
                     throw 'You must define an onClick function which returns a jqXhr object';
                 },
+                disabledOnDone: false,
                 spinnerSize: 16
             }, options);
 
@@ -121,8 +140,6 @@
             return this.each(function() {
                 var $el = $(this),
                     data = $el.data(NAME),
-                    height = $el.outerHeight(),
-                    width = $el.outerWidth(),
                     buttonContent = $el.html(),
                     baseClass = $el.attr('class');
 
@@ -138,7 +155,7 @@
                 $el.addClass('waitable-button');
 
                 // handle button click
-                handleButtonClick($el, settings, data, height, width, buttonContent, baseClass);
+                handleButtonClick($el, settings, data, buttonContent, baseClass);
             });
         },
 

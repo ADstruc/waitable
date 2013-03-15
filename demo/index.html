@@ -24,14 +24,17 @@
                     onClick: function() {
                         return fakeAjax('done', 1000);
                     },
-                    doneClass: 'btn btn-success'
+                    doneClass: 'btn btn-success',
+                    doneText: 'Done',
+                    disabledOnDone: true
                 });
 
                 $('#my-button-2').waitableButton({
                     onClick: function() {
                         return fakeAjax('fail', 1000);
                     },
-                    failClass: 'btn btn-danger'
+                    failClass: 'btn btn-danger',
+                    failText: 'Error! Try Again'
                 });
 
                 $('#my-button-2').waitableButton('promise')
