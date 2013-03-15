@@ -1,8 +1,122 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>jQuery Waitable Button</title>
-    </head>
-    <body>
-        <h1>jQuery Waitable Button</h1>
-    </body>
+  <head>
+    <title>Waitable Button</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="normalize.css" rel="stylesheet" type="text/css">
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/jquery.waitablebutton.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+      <a href="https://github.com/ADstruc/waitable"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+      <div class="container waitable-page-container">
+
+          <div class="row waitable-page-header"></div>
+
+          <div class="row waitable-page-description-and-examples">
+            <div class="span11 offset1">
+                <div class="row">
+                    <div class="span5 waitable-page-description">
+                        <h3>The Wait Is Over</h3>
+                        <p>The Waitable button is a jQuery plugin that allows you to quickly create a unified waiting state look for your buttons that trigger AJAX actions. Providing a function which returns a jQuery promise, waitable button takes care of the boilerplate of setting up waiting indicators, double submit prevention, and more!*</p>
+                        <p>* Actually, that's all it does. But quick, <a href="http://www.youtube.com/watch?v=6lCGzO-6Zgc">watch this!</a></p>
+                        </p>
+                    </div>
+                    <!--
+                    <div class="span6">
+                        <button class="btn btn-inverse waitable-page-example-spinner" type="button">
+                            <img src="img/spinner-64.gif" />
+                        </button>
+                    </div>
+                    //-->
+
+                </div>
+                <div class="row">
+                    <div class="span5 waitable-page-description">
+                        <h3>Examples & Use Cases</h3>
+                        <p>Click on the button below to see it in action!</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span10 waitable-page-description">
+                        <div class="span2">
+                            <button id="button-example-1" class="btn btn-small button-example" type="button">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="row waitable-page-download">
+            <div class="span6 offset1">
+                <a href="https://github.com/ADstruc/waitable/archive/1.0.zip" class="btn btn-large btn-primary" type="button">Download</a>
+            </div>
+            <div class="span5">
+                <p>
+
+                </p>
+            </div>
+          </div>
+<!--
+          <div class="row waitable-page-install">
+            <div class="row">
+                <div class="span1 offset1 waitable-page-step1-icon">
+
+                </div>
+                <div class="span10">
+                    <h4>Install Step Number 1</h4>
+                    <p>
+                        install instructions here
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span1 offset1 waitable-page-step2-icon">
+
+                </div>
+                <div class="span10">
+                    <h4>Install Step Number 2</h4>
+                    <p>
+                        install instructions here
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span1 offset1 waitable-page-step3-icon">
+
+                </div>
+                <div class="span10">
+                    <h4>Install Step Number 3</h4>
+                    <p>
+                        install instructions here
+                    </p>
+                </div>
+            </div>
+          </div>
+      </div>
+//-->
+      <div class="row waitable-page-footer">
+          <div class="span12">
+            <a href="http://adstruc.com"><img src="img/made-with-love.png" alt="Made with love by ADstruc" /></a>
+          </div>
+      </div>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/fakeajax.js" type="text/javascript"></script>
+    <script src="js/jquery.waitablebutton.js" type="text/javascript"></script>
+    <script>
+            $(document).ready(function(){
+                $('.button-example').waitableButton({
+                    onClick: function() {
+                        return fakeAjax('done', 1000);
+                    },
+                    doneClass: 'btn btn-small btn-success',
+                    doneText: 'Done!',
+                    disabledOnDone: true
+                });
+
+            });
+        </script>
+  </body>
 </html>

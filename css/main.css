@@ -1,0 +1,62 @@
+.waitable-page-container {
+    width: 100%;
+    padding-right: 0px;
+}
+
+/* Page header */
+
+.row.waitable-page-header {
+    background: #292929 url('../img/logo.png') no-repeat center;
+    height: 400px;
+}
+
+/* Description and main example */
+.row.waitable-page-description-and-examples {
+    padding: 40px 0px;
+}
+
+.waitable-page-description h3 {
+    color: #0da4cf;
+}
+
+.waitable-page-example-spinner {
+    height: 100px;
+    width: 200px;
+}
+
+/* Download */
+
+.row.waitable-page-download {
+    padding: 40px 0px;
+    background-color: #0da4cf;
+}
+
+.row.waitable-page-download p {
+    color: white;
+    font-size: 0.9em;
+}
+
+/* Install */
+.row.waitable-page-install {
+    padding: 40px 0px;
+    background-color: #eaeaea;
+}
+
+.waitable-page-step1-icon {
+    height: 60px;
+    background: url('../img/step-1.png') no-repeat center;
+}
+.waitable-page-step2-icon {
+    height: 60px;
+    background: url('../img/step-2.png') no-repeat center;
+}
+.waitable-page-step3-icon {
+    height: 60px;
+    background: url('../img/step-3.png') no-repeat center;
+}
+
+/* Footer */
+.row.waitable-page-footer {
+    padding: 25px;
+    background-color: #292929;
+}
