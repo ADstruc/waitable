@@ -17,6 +17,7 @@
     <body>
         <a href="#" id="my-button-1" class="btn btn-primary">Success Button</a>
         <a href="#" id="my-button-2" class="btn">Fail Button</a>
+        <a href="#" id="my-button-3" class="btn btn-info">Validation Button</a>
 
         <script>
             $(document).ready(function(){
@@ -35,6 +36,12 @@
                     },
                     failClass: 'btn btn-danger',
                     failText: 'Error! Try Again'
+                });
+
+                $('#my-button-3').waitableButton({
+                    onClick: function() {
+                        return false;
+                    },
                 });
 
                 $('#my-button-2').waitableButton('promise')

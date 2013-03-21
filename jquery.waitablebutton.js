@@ -66,7 +66,12 @@
             // call the user's callback and pass through context and event
             var xhr = settings.onClick.apply(this, e);
 
-            if('object' !== typeof xhr ||
+            if(false === xhr) {
+                cleanup($el, data);
+                $el.html(buttonContent);
+
+                return;
+            } else if('object' !== typeof xhr ||
                'function' !== typeof xhr.done ||
                'function' !== typeof xhr.fail ||
                'function' !== typeof xhr.always) {
@@ -110,14 +115,14 @@
                     }
                 })
                 .always(function() {
-                    hideSpinner($el);
-                    cleanup($el);
-                    data.inProgress = false;
+                    cleanup($el, data);
                 });
         });
     };
 
-    var cleanup = function($el) {
+    var cleanup = function($el, data) {
+        hideSpinner($el);
+        data.inProgress = false;
         $el.css('height', '');
         $el.css('width', '');
     };
