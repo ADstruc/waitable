@@ -21,7 +21,7 @@
 }
 
 .waitable-button-spinner.waitable-button-spinner-16 {
-	background: url('images/spinner-16.gif') no-repeat 0 0;
+	background: url('/images/spinner-16.gif') no-repeat 0 0;
 	height: 16px;
 	width: 16px;
 	margin-top: -8px;
@@ -29,7 +29,7 @@
 }
 
 .waitable-button-spinner.waitable-button-spinner-32 {
-	background: url('images/spinner-32.gif') no-repeat 0 0;
+	background: url('/images/spinner-32.gif') no-repeat 0 0;
 	height: 32px;
 	width: 32px;
 	margin-top: -16px;
@@ -37,7 +37,7 @@
 }
 
 .waitable-button-spinner.waitable-button-spinner-64 {
-	background: url('images/spinner-64.gif') no-repeat 0 0;
+	background: url('/images/spinner-64.gif') no-repeat 0 0;
 	height: 64px;
 	width: 64px;
 	margin-top: -32px;
