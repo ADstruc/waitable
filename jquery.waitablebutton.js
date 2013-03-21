@@ -41,8 +41,8 @@
                 return;
             }
 
-            var height = $el.outerHeight(),
-                width = $el.outerWidth();
+            var height = $el.height(),
+                width = $el.width();
 
             // set button dimensions explicitly
             $el.css('height', height)
@@ -128,6 +128,9 @@
                 onClick: function() {
                     throw 'You must define an onClick function which returns a jqXhr object';
                 },
+                baseClass: '',
+                doneClass: '',
+                failClass: '',
                 disabledOnDone: false,
                 spinnerSize: 16
             }, options);
