@@ -141,7 +141,7 @@
             }, options);
 
             // validate spinnerSize option
-            if(-1 === [16, 32, 64].indexOf(settings.spinnerSize)) {
+            if ($.inArray(settings.spinnerSize, [16, 32, 64])) {            
                 $.error('Spinner size should be 16, 32 or 64');
             }
 
