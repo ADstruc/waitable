@@ -64,7 +64,7 @@
                 .addClass(baseClass);
 
             // call the user's callback and pass through context and event
-            var xhr = settings.onClick.apply(this, e);
+            var xhr = settings.onClick.call(this, e);
 
             if(false === xhr) {
                 cleanup($el, data);
@@ -141,7 +141,7 @@
             }, options);
 
             // validate spinnerSize option
-            if ($.inArray(settings.spinnerSize, [16, 32, 64])) {            
+            if ($.inArray(settings.spinnerSize, [16, 32, 64])) {
                 $.error('Spinner size should be 16, 32 or 64');
             }
 
