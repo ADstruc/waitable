@@ -42,7 +42,7 @@
             }
 
             var height = 'border-box' === $el.css('box-sizing') ? $el.outerHeight() : $el.height();
-                width = 'border-box' === $el.css('box-sizing') ? $el.outerWidth() : $el.width();
+            var width = 'border-box' === $el.css('box-sizing') ? $el.outerWidth() : $el.width();
 
             // set button dimensions explicitly
             $el.css('height', height)
